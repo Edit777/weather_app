@@ -63,6 +63,7 @@ export const getCoordsFromApi = async (searchRequest, units) => {
       body: JSON.stringify(urlDataObject),
     });
     const jsonData = await dataStream.json();
+    // console.log(jsonData);
     return jsonData;
   } catch (error) {
     console.error(error);
