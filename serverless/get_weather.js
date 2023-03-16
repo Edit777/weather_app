@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 const { WEATHER_API_KEY } = process.env;
 
 exports.handler = async (event, context) => {
@@ -8,12 +10,12 @@ exports.handler = async (event, context) => {
     const weatherStream = await fetch(url);
     const weatherJson = await weatherStream.json();
     return {
-      statuscode: 200,
+      statusCode: 200,
       body: JSON.stringify(weatherJson),
     };
   } catch (error) {
     return {
-      statuscode: 422,
+      statusCode: 422,
       body: error.stack,
     };
   }
