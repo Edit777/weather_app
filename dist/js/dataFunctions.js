@@ -13,12 +13,27 @@ export const getHomeLocation = () => {
 };
 
 export const getWeatherFromCoords = async (locationObject) => {
-  const latitude = locationObject.latitude;
-  const longitude = locationObject.longitude;
-  const units = locationObject.unit;
-  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&units=${units}&appid=${WEATHER_API_KEY}`;
+  // const latitude = locationObject.latitude;
+  // const longitude = locationObject.longitude;
+  // const units = locationObject.unit;
+  // const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&units=${units}&appid=${WEATHER_API_KEY}`;
+  // try {
+  //   const weatherStream = await fetch(url);
+  //   const weatherJson = await weatherStream.json();
+  //   return weatherJson;
+  // } catch (error) {
+  //   console.error(error.stack);
+  // }
+  const urlDataObject = {
+    latitude: locationObject.latitude,
+    longitude: locationObject.longitude,
+    units: locationObject.unit,
+  };
   try {
-    const weatherStream = await fetch(url);
+    const weatherStream = await fetch("./.netlify/functions/get_weather", {
+      method: "POST",
+      body: JSON.stringify(urlDataObject),
+    });
     const weatherJson = await weatherStream.json();
     return weatherJson;
   } catch (error) {
@@ -27,16 +42,30 @@ export const getWeatherFromCoords = async (locationObject) => {
 };
 
 export const getCoordsFromApi = async (searchRequest, units) => {
-  const regex = /^\d+$/g;
-  const flag = regex.test(searchRequest) ? "zip" : "q";
-  const url = `https://api.openweathermap.org/data/2.5/weather?${flag}=${searchRequest}&units=${units}&appid=${WEATHER_API_KEY}`;
-  const encodedUrl = encodeURI(url);
+  // const regex = /^\d+$/g;
+  // const flag = regex.test(searchRequest) ? "zip" : "q";
+  // const url = `https://api.openweathermap.org/data/2.5/weather?${flag}=${searchRequest}&units=${units}&appid=${WEATHER_API_KEY}`;
+  // const encodedUrl = encodeURI(url);
+  // try {
+  //   const dataStream = await fetch(encodedUrl);
+  //   const jsonData = await dataStream.json();
+  //   return jsonData;
+  // } catch (error) {
+  //   console.error(error.stack);
+  // }
+  const urlDataObject = {
+    request: searchRequest,
+    units: units,
+  };
   try {
-    const dataStream = await fetch(encodedUrl);
+    const dataStream = await fetch("./.netlify/functions/get_coords", {
+      method: "POST",
+      body: JSON.stringify(urlDataObject),
+    });
     const jsonData = await dataStream.json();
     return jsonData;
   } catch (error) {
-    console.error(error.stack);
+    console.error(error);
   }
 };
 
